@@ -81,7 +81,7 @@ public class SoundManager : MonoBehaviour
         muteButton.gameObject.SetActive(!isMuted);
         unmuteButton.gameObject.SetActive(isMuted);
 
-        // Set slider to 0.5 on first startup
+        // Set slider to 0.25 on first startup
         if (isFirstStartup)
         {
             volumeSlider.value = 0.25f;
