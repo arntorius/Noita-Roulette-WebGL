@@ -8777,7 +8777,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'note: there are only 12 unique bosses, 13-20 are used for the pararell
+  m_Text: 'note: there are only 12 unique bosses, 13-20 are used for the paralell
     world bosses'
 --- !u!222 &377058353
 CanvasRenderer:
