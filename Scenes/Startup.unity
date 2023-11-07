@@ -1239,8 +1239,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 876792325}
   m_HandleRect: {fileID: 876792324}
   m_Direction: 2
-  m_Value: 0.999984
-  m_Size: 0.56768835
+  m_Value: 0.9147431
+  m_Size: 0.4086047
   m_NumberOfSteps: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2801,15 +2801,15 @@ MonoBehaviour:
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_DecelerationRate: 1
+  m_ScrollSensitivity: 12
   m_Viewport: {fileID: 289997143}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 604783802}
   m_HorizontalScrollbarVisibility: 2
   m_VerticalScrollbarVisibility: 2
   m_HorizontalScrollbarSpacing: -3
-  m_VerticalScrollbarSpacing: -3
+  m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3314,8 +3314,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0069356994, y: 0.00036893264}
-  m_SizeDelta: {x: 0, y: 752}
+  m_AnchoredPosition: {x: 0.0069356994, y: 52.668156}
+  m_SizeDelta: {x: 0, y: 1044.77}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1478694646
 MonoBehaviour:
@@ -3355,11 +3355,13 @@ MonoBehaviour:
     the task given and win the game!\r (game not included!)\n\r\nexample:  \r\nyou
     click on roll, hit stop - the result: 3 / 5 / 9; \r\nmeans you have to do 3 Fungal
     Shifts, Collect 5 Orbs of true knowlege, \nSlay 9 bosses!\r\n\r\n\r\nTo use:\r\n\r\nclick
-    on the \"Roll\" button for a standard 0-11 roll in each of the 3 categories \n(Shifts/Orbs/Bosses)\r\n\r\nAsk
-    the Gods: lets you roll challenges to add to your run. With the \ncustomize button
-    you can add your own challenges and manage all saved \nchallenges.\r\n\r\nCustom
-    Roll: you can select each roll (Shifts, Orbs, Bosses) to roll from 0 \nto your
-    selected value.\r\n\r\nGlhf!"
+    on the \"Roll\" button for a standard 0-11 roll in each of the 3 categories \n(Shifts/Orbs/Bosses)\r\n\r\nBut
+    wait, theres MORE!!\n\nCustom Roll: you can select each roll (Shifts, Orbs, Bosses)
+    to roll from 0 \nto your selected value.\r\n\nAsk the Gods: you can roll challenges
+    to add to your run. With the \n\"Customise\" button you can add your own challenges
+    and manage all saved \nchallenges.\r\n\r\nPerk Roulette: 3 functions for you
+    to choose how to roll your \"Perkpool\"\nwith some suggested rulesets.\n\nWand
+    Roulette: roll your wand to then build ingame and slay bosses with it!\n\r\n\n\nGlhf!"
 --- !u!222 &1478694647
 CanvasRenderer:
   m_ObjectHideFlags: 0

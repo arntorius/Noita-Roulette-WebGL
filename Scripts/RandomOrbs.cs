@@ -11,13 +11,13 @@ public class RandomOrbs : MonoBehaviour {
     public Button RollButton;
 
     private int running;
-    private int counter;
+
 
 
     void Start()
     {
         running = 0;
-        counter = 0;
+
 
     }
 

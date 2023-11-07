@@ -7,7 +7,7 @@ public class ChallengeMe : MonoBehaviour
 {
     public Text ButtonText;
     private int running;
-    private int counter;
+
 
     //texts list
     public List<string> Texts = new List<string>();
@@ -18,7 +18,12 @@ public class ChallengeMe : MonoBehaviour
     public Button myChallengesButton;
     public Button deleteChallengeButton;
     public Text challengeText;
+    public RectTransform challengeTextRect;
     public Dropdown challengeDropdown;
+
+    // Font size settings
+    public int minFontSize = 12;
+    public int maxFontSize = 24;
 
     // Key to use for saving and loading challenges in PlayerPrefs
     private const string CHALLENGE_KEY = "challenges";
@@ -26,7 +31,10 @@ public class ChallengeMe : MonoBehaviour
     void Start()
     {
         running = 0;
-        counter = 0;
+
+
+        // Update font size based on available space
+        UpdateChallengeTextFontSize();
 
         // Disable the delete challenge button initially
         deleteChallengeButton.gameObject.SetActive(false);
@@ -120,18 +128,49 @@ public class ChallengeMe : MonoBehaviour
             SaveChallenges();
         }
 
-        // This function updates the options in the challenge dropdown menu
-        private void UpdateDropdown()
-        {
-            // Clear the current options
-            challengeDropdown.ClearOptions();
+    // This function updates the options in the challenge dropdown menu
+    private void UpdateDropdown()
+    {
+        // Clear the current options
+        challengeDropdown.ClearOptions();
 
-            // Add the challenges as options in the dropdown menu
-            challengeDropdown.AddOptions(Texts);
+        // Calculate maximum number of characters that can fit in one line
+        int maxCharactersPerLine = Mathf.FloorToInt(challengeTextRect.rect.width / challengeText.fontSize);
+
+        // Add the challenges as options in the dropdown menu with line breaks
+        foreach (string challenge in Texts)
+        {
+            // Insert line breaks to fit the text within available width
+            string formattedChallenge = InsertLineBreaks(challenge, maxCharactersPerLine);
+            challengeDropdown.options.Add(new Dropdown.OptionData(formattedChallenge));
         }
 
-        // This function saves the challenges to PlayerPrefs
-        private void SaveChallenges()
+        // Set a listener for the dropdown value changed event
+        challengeDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+    }
+
+    private string InsertLineBreaks(string text, int maxCharactersPerLine)
+    {
+        // Insert line breaks to fit the text within available width
+        int charactersInserted = 0;
+        while (charactersInserted + maxCharactersPerLine < text.Length)
+        {
+            text = text.Insert(charactersInserted + maxCharactersPerLine, "\n");
+            charactersInserted += maxCharactersPerLine + 1; // +1 for the inserted newline character
+        }
+        return text;
+    }
+
+    // Callback for Dropdown value changed event
+    private void OnDropdownValueChanged(int value)
+    {
+        // Display the selected challenge text
+        challengeText.text = Texts[value];
+    }
+
+
+    // This function saves the challenges to PlayerPrefs
+    private void SaveChallenges()
         {
             // Convert the list of challenges to a string
             string challenges = string.Join(",", Texts.ToArray());
@@ -159,6 +198,25 @@ public class ChallengeMe : MonoBehaviour
 
         // Add the challenges to the list
         Texts.AddRange(challengeArray);
+    }
+
+    private void UpdateChallengeTextFontSize()
+    {
+        // Calculate maximum number of characters that can fit in the available width
+        int maxCharacters = Mathf.FloorToInt(challengeTextRect.rect.width / challengeText.fontSize);
+
+        // Calculate font size based on the maximum number of characters
+        int fontSize = Mathf.Clamp(maxFontSize, minFontSize, maxFontSize);
+        challengeText.fontSize = fontSize;
+
+        // Update the text
+        ShowMyChallenges();
+    }
+
+    // Update is called whenever the RectTransform changes (e.g., screen resize)
+    private void Update()
+    {
+        UpdateChallengeTextFontSize();
     }
 
 }

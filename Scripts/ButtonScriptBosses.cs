@@ -19,7 +19,7 @@ public class ButtonScriptBosses : MonoBehaviour
 
 
     private int running;
-    private int counter;
+
     private int roll;
 
     IEnumerator Runner()
@@ -48,7 +48,7 @@ public class ButtonScriptBosses : MonoBehaviour
 
 
         running = 0;
-        counter = 0;
+
 
 
 

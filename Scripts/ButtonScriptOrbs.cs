@@ -18,7 +18,7 @@ public class ButtonScriptOrbs : MonoBehaviour
 
 
     private int running;
-    private int counter;
+
     private int roll;
     public Text valueText;
 
@@ -48,7 +48,7 @@ public class ButtonScriptOrbs : MonoBehaviour
 
 
         running = 0;
-        counter = 0;
+ 
 
 
 
