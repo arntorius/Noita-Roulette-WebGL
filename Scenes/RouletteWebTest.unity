@@ -21532,11 +21532,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Roll your Perkpool!\n\nRulesets:\n1. You are only allowed to grab perks
-    from the pool shown on screen after the roll. \n2. You have to grab all perks
-    shown on screen after the roll.\n\nType in a number from 1-103\nFor a standard
-    run, you want to roll about 10.\n\nGamble - roll from 0 to set Nr. \nGet set
-    Nr. - Get the set number.\nJust the Nr. Please - no perkpool, random number output."
+  m_Text: "Roll your Perkpool!\n\nRulesets - Decide:\n1. You are only allowed to
+    grab perks from the pool shown on screen after the roll. \n2. You have to grab
+    all perks shown on screen after the roll.\n\nType in a number from 1-103\n\nGamble
+    - roll from 0 to set No. \nGet set No. - Get the set number.\nJust the No. Please
+    - no perkpool, random number output."
 --- !u!222 &728646111
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -37016,7 +37016,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Just the Nr. Please
+  m_Text: Just the No. Please
 --- !u!222 &1373711659
 CanvasRenderer:
   m_ObjectHideFlags: 0
