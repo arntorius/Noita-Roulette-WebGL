@@ -85,17 +85,22 @@ public class ChallengeMe : MonoBehaviour
         // Get the challenge text from the input field
         string challenge = inputField.text;
 
-        // Add the challenge to the list of challenges
-        Texts.Add(challenge);
+        // Check if the input field is not empty
+        if (!string.IsNullOrEmpty(challenge))
+        {
 
-        // Clear the input field
-        inputField.text = "";
+            // Add the challenge to the list of challenges
+            Texts.Add(challenge);
 
-        // Update the dropdown menu
-        UpdateDropdown();
+            // Clear the input field
+            inputField.text = "";
 
-        // Save the challenges to PlayerPrefs
-        SaveChallenges();
+            // Update the dropdown menu
+            UpdateDropdown();
+
+            // Save the challenges to PlayerPrefs
+            SaveChallenges();
+        }
     }
 
     // This function is called when the "My Challenges" button is clicked

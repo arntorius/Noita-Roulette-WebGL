@@ -23222,7 +23222,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.099975586, y: 27.099976}
+  m_AnchoredPosition: {x: 0.099975586, y: 12.700012}
   m_SizeDelta: {x: -602.5499, y: -69.52999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &792640490
@@ -23274,10 +23274,9 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 0.7
   m_Text: "Roll your wand!\n\nThe challenge is to build a wand with the given resources
-    and kill Kolmi/Bosses with it!\n\nHit roll and recieve:\nThe number of slots
-    for your wand, spells you have to build your wand with. \n\nYou have 3 re-rolls
-    and you can ban up to 3 spells.\n\n\nWarning:\nRe-Roll only rolls the spells\nBans
-    are final!"
+    and kill Kolmi/Bosses with it!\n\nHit roll and recieve the spells you have to
+    build your wand with. \n\nYou have 3 re-rolls and you can ban up to 3 spells.\n\n\nWarning:\nRe-Roll
+    only rolls the spells\nBans are final!"
 --- !u!222 &792640492
 CanvasRenderer:
   m_ObjectHideFlags: 0
