@@ -85,8 +85,8 @@ public class ChallengeMe : MonoBehaviour
         // Get the challenge text from the input field
         string challenge = inputField.text;
 
-        // Check if the input field is not empty
-        if (!string.IsNullOrEmpty(challenge))
+        // Check if the input field is not empty and does not consist only of spaces
+        if (!string.IsNullOrWhiteSpace(challenge))
         {
 
             // Add the challenge to the list of challenges
