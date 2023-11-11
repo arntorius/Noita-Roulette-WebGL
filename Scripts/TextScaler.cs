@@ -11,17 +11,7 @@ public class TextScaler : MonoBehaviour
     private void Start()
     {
         textField = GetComponent<Text>();
-
-        // Register a callback for when the parent's size changes
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRectTransform);
-        LayoutRebuilder.MarkLayoutForRebuild(parentRectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRectTransform);
-        parentRectTransform.GetComponent<LayoutGroup>().CalculateLayoutInputVertical();
-        parentRectTransform.GetComponent<LayoutGroup>().SetLayoutHorizontal();
-        parentRectTransform.GetComponent<LayoutGroup>().SetLayoutVertical();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parentRectTransform);
-
-        LayoutRebuilder.MarkLayoutForRebuild(transform as RectTransform);
+        ScaleText();
     }
 
     private void Update()
