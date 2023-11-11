@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: -283865981604987480}
   - component: {fileID: 7810018136648132513}
   - component: {fileID: 162056914652637767}
-  m_Layer: 7
-  m_Name: empty
+  - component: {fileID: -2607500318751659444}
+  m_Layer: 8
+  m_Name: CreatureEmpty
   m_TagString: Surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,8 +30,8 @@ RectTransform:
   m_GameObject: {fileID: 7188449769780358024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.722}
-  m_LocalScale: {x: 0.0896, y: 0.0896, z: 0.0896}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -78,11 +79,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -108183247
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 76d41b6beecdf2f419a6e6db5cd2cd0b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.514151, g: 0.6143159, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -226,3 +227,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7694feba13ad7b42aadf9227ef5cf05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!222 &-2607500318751659444
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7188449769780358024}
+  m_CullTransparentMesh: 1
