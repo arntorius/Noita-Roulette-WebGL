@@ -1,8 +1,8 @@
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static RouletteStatEntry;
+using UnityEngine.Events;
+
 
 [System.Serializable]
 public class RouletteStatEntry
@@ -10,26 +10,35 @@ public class RouletteStatEntry
     public string title;
     public List<int> results;
     public Outcome userOutcome;
-    public DateTime date;
-    public string filename; // Add a new field for the filename
+    public DateTime date; // Remove [System.NonSerialized]
+    public string filename;
 
     public RouletteStatEntry()
     {
-        // Set the default value to Open when a new instance is created
         userOutcome = Outcome.Open;
+        date = DateTime.Now;
     }
 
     public enum Outcome
     {
-        Open, // Default value is now Open
+        Open,
         Win,
         Loss
     }
 }
 
+
+
 public class StatsManagerSingleton : MonoBehaviour
 {
+    public UnityEvent OnStatsUpdated = new UnityEvent();
+
     private static StatsManagerSingleton instance;
+    private const string PlayerPrefsKey = "RouletteStats";
+
+    public List<RouletteStatEntry> rouletteStats = new List<RouletteStatEntry>();
+
+
     public static StatsManagerSingleton Instance
     {
         get
@@ -38,78 +47,83 @@ public class StatsManagerSingleton : MonoBehaviour
             {
                 GameObject go = new GameObject("StatsManagerSingleton");
                 instance = go.AddComponent<StatsManagerSingleton>();
-
-                // Ensure the GameObject persists between scenes
                 DontDestroyOnLoad(go);
-
-                // Load stats on startup
-                instance.LoadStats();
+                instance.LoadStatsFromPlayerPrefs();
             }
-            else if (instance != null && instance != FindObjectOfType<StatsManagerSingleton>())
-            {
-                Destroy(instance.gameObject);
-                instance = null;
-                return Instance;
-            }
-
             return instance;
         }
     }
+    void Awake()
+    {
+        Debug.Log("StatsManagerSingleton Awake method called.");
 
+        if (instance == null)
+        {
+            instance = this;
+            LoadStatsFromPlayerPrefs();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    void Start()
+    {
+        LoadStatsFromPlayerPrefs();
+    }
 
-
-    public List<RouletteStatEntry> rouletteStats = new List<RouletteStatEntry>();
-
-    // Add or update a roulette stat entry
     public void AddRouletteStatEntry(string title, List<int> results, string filename = null)
     {
-        // Check if an entry with the same title already exists
         RouletteStatEntry existingEntry = rouletteStats.Find(entry => entry.title == title);
 
-        // Add a new entry at the beginning of the list
-        rouletteStats.Insert(0, new RouletteStatEntry
+        RouletteStatEntry newEntry = new RouletteStatEntry
         {
             title = title,
             results = results,
-            userOutcome = Outcome.Open, // Set the default outcome to Open
-            date = System.DateTime.Now,
-            filename = filename // Set the filename
-        });
+            date = DateTime.Now,
+            filename = filename
+        };
+
+        // Set userOutcome to the last saved state or Open if it's a new entry
+        newEntry.userOutcome = existingEntry != null ? existingEntry.userOutcome : RouletteStatEntry.Outcome.Open;
+
+        rouletteStats.Insert(0, newEntry);
+
+        SaveStatsToPlayerPrefs();
     }
+
 
     public void AddBountyHuntResult(int numCreatures)
     {
         string title = "The Bounty Hunt";
         List<int> results = new List<int> { numCreatures };
-
-        // Add the results to the StatsManager
         AddRouletteStatEntry(title, results);
     }
+
     public void AddResult(string title, int result)
     {
-        // Check if an entry with the same title already exists
         RouletteStatEntry existingEntry = rouletteStats.Find(entry => entry.title == title);
 
         if (existingEntry != null)
         {
-            // Add the result to the existing entry
             existingEntry.results = new List<int> { result };
-            SaveStats();
+            
+            SaveStatsToPlayerPrefs();
         }
         else
         {
-            // Add a new entry with the result
             AddRouletteStatEntry(title, new List<int> { result });
         }
     }
 
-    // Delete a roulette stat entry at the specified index
     public void DeleteRouletteStatEntry(int index)
     {
         if (index >= 0 && index < rouletteStats.Count)
         {
             rouletteStats.RemoveAt(index);
-            SaveStats(); // Save the updated stats after deletion
+            
+            SaveStatsToPlayerPrefs();
         }
         else
         {
@@ -117,36 +131,94 @@ public class StatsManagerSingleton : MonoBehaviour
         }
     }
 
-    // Save the stats to PlayerPrefs
-    public void SaveStats()
+    public void SaveStatsToPlayerPrefs()
     {
-        string statsJson = JsonUtility.ToJson(rouletteStats);
-        PlayerPrefs.SetString("RouletteStats", statsJson);
+        string statsString = ConvertStatsListToString(rouletteStats);
+        PlayerPrefs.SetString(PlayerPrefsKey, statsString);
         PlayerPrefs.Save();
-    }
 
-    // Load the stats from PlayerPrefs
-    private void LoadStats()
-    {
-        if (PlayerPrefs.HasKey("RouletteStats"))
-        {
-            string statsJson = PlayerPrefs.GetString("RouletteStats");
-            rouletteStats = JsonUtility.FromJson<List<RouletteStatEntry>>(statsJson);
-        }
-    }
+        Debug.Log("Stats saved to PlayerPrefs:");
+        Debug.Log(statsString);
 
-    void Awake()
+        OnStatsUpdated.Invoke();
+    }
+    private void LoadStatsFromPlayerPrefs()
     {
-        if (instance == null)
+        Debug.Log("Loading stats from PlayerPrefs.");
+
+        if (PlayerPrefs.HasKey(PlayerPrefsKey))
         {
-            instance = this;
-            // Load stats on startup
-            LoadStats();
-            DontDestroyOnLoad(gameObject);  // Keep the GameObject persistent between scenes
+            string statsJson = PlayerPrefs.GetString(PlayerPrefsKey);
+            Debug.Log($"Loaded stats JSON: {statsJson}");
+
+            if (!string.IsNullOrEmpty(statsJson) && statsJson != "{}")
+            {
+                List<RouletteStatEntry> loadedStats = ConvertStatsStringToList(statsJson);
+
+                // Update userOutcome based on the last saved state
+                foreach (var entry in loadedStats)
+                {
+                    RouletteStatEntry lastSavedState = rouletteStats.Find(x => x.title == entry.title);
+                    if (lastSavedState != null)
+                    {
+                        entry.userOutcome = lastSavedState.userOutcome;
+                    }
+                }
+
+                rouletteStats = loadedStats;
+                Debug.Log("Stats loaded successfully.");
+            }
+            else
+            {
+                Debug.Log("Loaded stats JSON is empty or invalid. Initializing with default values.");
+                rouletteStats = new List<RouletteStatEntry>();
+            }
+
+            OnStatsUpdated.Invoke();
         }
         else
         {
-            Destroy(gameObject);
+            Debug.Log("No stats found in PlayerPrefs. Initializing with default values.");
+            rouletteStats = new List<RouletteStatEntry>();
         }
     }
+
+
+    private List<RouletteStatEntry> ConvertStatsStringToList(string statsString)
+    {
+        // Remove the curly braces from the JSON string to get an array of objects
+        statsString = statsString.TrimStart('{').TrimEnd('}');
+
+        // Split the string into individual stat entries
+        string[] statsArray = statsString.Split(new[] { "},{" }, StringSplitOptions.None);
+
+        List<RouletteStatEntry> statsList = new List<RouletteStatEntry>();
+
+        foreach (string statEntry in statsArray)
+        {
+            // Add the curly braces back to each entry to form a valid JSON object
+            string statJson = "{" + statEntry + "}";
+            RouletteStatEntry stat = JsonUtility.FromJson<RouletteStatEntry>(statJson);
+            statsList.Add(stat);
+        }
+
+        return statsList;
+    }
+
+
+    private string ConvertStatsListToString(List<RouletteStatEntry> statsList)
+    {
+        List<string> statsStringList = new List<string>();
+
+        foreach (RouletteStatEntry stat in statsList)
+        {
+            string statString = JsonUtility.ToJson(stat);
+            statsStringList.Add(statString);
+        }
+
+        string statsString = string.Join(",", statsStringList.ToArray());
+        return statsString;
+    }
+
+
 }

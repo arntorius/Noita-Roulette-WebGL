@@ -2546,9 +2546,6 @@ GameObject:
   - component: {fileID: 98850825}
   - component: {fileID: 98850826}
   - component: {fileID: 98850827}
-  - component: {fileID: 98850828}
-  - component: {fileID: 98850830}
-  - component: {fileID: 98850829}
   m_Layer: 0
   m_Name: StatsManager
   m_TagString: Untagged
@@ -2595,49 +2592,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e788a140ebecd6e4783ec4c753739776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnStatsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
   rouletteStats: []
---- !u!114 &98850828
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 98850823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  addButton: {fileID: 189347806}
-  titleToAdd: Ask the Gods
---- !u!114 &98850829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 98850823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  addButton: {fileID: 284810113}
-  titleToAdd: Random Quest
---- !u!114 &98850830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 98850823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  addButton: {fileID: 1932580093}
-  titleToAdd: Achievement Roll
 --- !u!1 &102255082
 GameObject:
   m_ObjectHideFlags: 0
@@ -5238,6 +5196,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: AddTitleStat, Assembly-CSharp
+        m_MethodName: AddTitleStatEntry
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &189347807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6671,7 +6641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -370, y: -74.7}
+  m_AnchoredPosition: {x: 0, y: -74.7}
   m_SizeDelta: {x: 257.7, y: 89.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &255053240
@@ -21354,7 +21324,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.1, y: 0}
+  m_AnchoredPosition: {x: -370, y: 0}
   m_SizeDelta: {x: 257.7, y: 89.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &633472742
@@ -39297,7 +39267,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.7000122, y: -8.122498}
+  m_AnchoredPosition: {x: 2.7000122, y: 57.5}
   m_SizeDelta: {x: -213.3994, y: -557.1749}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1181270034
@@ -39362,19 +39332,7 @@ MonoBehaviour:
 
 
     Hit "Roll Quest" and
-    you get 3 things:
-
-
-    1. "Bring/Get:" - an item/spell/entity
-
-
-    2. "To:"
-    - a location where you have to bring the things from categorie 1.
-
-
-    3. "Complete
-    At:" - the final destination for the things from categorie 1, after you visited
-    the location from categorie 2.'
+    try it out!'
 --- !u!222 &1181270036
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -39996,7 +39954,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -370, y: 74.7}
+  m_AnchoredPosition: {x: 0, y: 74.7}
   m_SizeDelta: {x: 257.7, y: 89.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1217003511
@@ -57026,6 +56984,82 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &1872047431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1872047435}
+  - component: {fileID: 1872047434}
+  - component: {fileID: 1872047433}
+  - component: {fileID: 1872047432}
+  m_Layer: 0
+  m_Name: StatsTitleSender
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1872047432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872047431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addButton: {fileID: 1932580093}
+  titleToAdd: Achievement Pillar
+--- !u!114 &1872047433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872047431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addButton: {fileID: 284810113}
+  titleToAdd: Random Quest
+--- !u!114 &1872047434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872047431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a15e3aa44c8105b43806bc4a7425eb73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addButton: {fileID: 189347806}
+  titleToAdd: Ask the Gods
+--- !u!4 &1872047435
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872047431}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.0019245148, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1874632831
 GameObject:
   m_ObjectHideFlags: 0
@@ -59229,42 +59263,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: randomGenerator, Assembly-CSharp
-        m_MethodName: TaskOnClick2
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: RandomBosses, Assembly-CSharp
-        m_MethodName: TaskOnClick2
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: RandomShifts, Assembly-CSharp
-        m_MethodName: TaskOnClick2
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
       - m_Target: {fileID: 587013360}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive

@@ -1,4 +1,3 @@
-
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,16 +9,30 @@ public class DisplayStatsScene2 : MonoBehaviour
 
     private StatsManagerSingleton statsManagerSingleton;
     private int currentHighlightedIndex = -1; // Track the currently highlighted entry index
-
     void Start()
     {
         statsManagerSingleton = StatsManagerSingleton.Instance;
 
-        // Select the topmost entry on start
-        currentHighlightedIndex = 0;
+        // Initialize currentHighlightedIndex to an invalid index
+        currentHighlightedIndex = -1;
+
+        // Find the index of the entry with the latest date
+        DateTime latestDate = DateTime.MinValue;
+        for (int i = 0; i < statsManagerSingleton.rouletteStats.Count; i++)
+        {
+            if (statsManagerSingleton.rouletteStats[i].date > latestDate)
+            {
+                latestDate = statsManagerSingleton.rouletteStats[i].date;
+                currentHighlightedIndex = i;
+            }
+        }
+
+        // Select the topmost entry if no entry has a valid date
+        currentHighlightedIndex = Mathf.Clamp(currentHighlightedIndex, 0, statsManagerSingleton.rouletteStats.Count - 1);
 
         DisplayStats();
     }
+
 
     void Update()
     {
@@ -37,6 +50,7 @@ public class DisplayStatsScene2 : MonoBehaviour
             SelectNextEntry();
         }
     }
+
     void DisplayStats()
     {
         if (statsManagerSingleton != null && statsManagerSingleton.rouletteStats.Count > 0)
@@ -76,8 +90,6 @@ public class DisplayStatsScene2 : MonoBehaviour
         return str + new string(' ', spacesToAdd);
     }
 
-
-
     // Attach this method to the UI button's OnClick event
     public void DeleteSelectedEntry()
     {
@@ -86,6 +98,8 @@ public class DisplayStatsScene2 : MonoBehaviour
         {
             // Delete the currently highlighted entry
             statsManagerSingleton.DeleteRouletteStatEntry(currentHighlightedIndex);
+            // Update the currentHighlightedIndex to a valid value after deletion
+            currentHighlightedIndex = Mathf.Clamp(currentHighlightedIndex, 0, statsManagerSingleton.rouletteStats.Count - 1);
             // Refresh the displayed stats
             DisplayStats();
         }
@@ -94,6 +108,7 @@ public class DisplayStatsScene2 : MonoBehaviour
             Debug.LogError("StatsManagerSingleton instance not found.");
         }
     }
+
     public void SelectPreviousEntry()
     {
         currentHighlightedIndex = Mathf.Max(0, currentHighlightedIndex - 1);
@@ -107,6 +122,7 @@ public class DisplayStatsScene2 : MonoBehaviour
         Debug.Log($"Selected next entry: {currentHighlightedIndex}");
         DisplayStats();
     }
+
     public void SetOutcomeToWin()
     {
         SetOutcome(RouletteStatEntry.Outcome.Win);
@@ -120,10 +136,16 @@ public class DisplayStatsScene2 : MonoBehaviour
     private void SetOutcome(RouletteStatEntry.Outcome outcome)
     {
         // Set the selected outcome for the currently highlighted entry
-        RouletteStatEntry entry = statsManagerSingleton.rouletteStats[currentHighlightedIndex];
-        entry.userOutcome = outcome;
-        Debug.Log($"Set outcome to {outcome} for entry {currentHighlightedIndex}: {entry.title}");
-        DisplayStats();
+        if (statsManagerSingleton != null && statsManagerSingleton.rouletteStats.Count > 0)
+        {
+            RouletteStatEntry entry = statsManagerSingleton.rouletteStats[currentHighlightedIndex];
+            entry.userOutcome = outcome;
+            Debug.Log($"Set outcome to {outcome} for entry {currentHighlightedIndex}: {entry.title}");
+            DisplayStats();
+
+            // Save the stats after setting the outcome
+            statsManagerSingleton.SaveStatsToPlayerPrefs();
+        }
     }
 
 }
