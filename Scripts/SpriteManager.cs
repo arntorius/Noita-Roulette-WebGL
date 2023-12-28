@@ -33,6 +33,8 @@ public class SpriteManager : MonoBehaviour
     public int numberOfRows = 2;
     private AudioSource rollingAudioSource;
     private List<GameObject> instantiatedSprites = new List<GameObject>(); // List to store instantiated sprites
+    private int rolledNumber;
+
 
 
 
@@ -78,6 +80,10 @@ public class SpriteManager : MonoBehaviour
             // Create a copy of the spritePrefabs array to shuffle temporarily
             GameObject[] tempSprites = spritePrefabs.Clone() as GameObject[];
 
+            // Store the rolled number
+            rolledNumber = Random.Range(0, inputNumber + 1);
+            Debug.Log("Rolled Number: " + rolledNumber);
+
             // Shuffle the temporary array
             for (int i = 0; i < tempSprites.Length; i++)
             {
@@ -122,8 +128,8 @@ public class SpriteManager : MonoBehaviour
             // Start the rolling coroutine with the specified duration
             rollingCoroutine = StartCoroutine(RollSprites(totalSprites));
 
-            // Unmute audio after a short delay
-            StartCoroutine(UnmuteAllAudioWithDelay(unmuteDuration));
+            // Add stat entry for the initiated roll
+            AddStatEntry("Perks: Give set No.", new List<int> { inputNumber });
         }
         else
         {
@@ -144,12 +150,20 @@ public class SpriteManager : MonoBehaviour
 
             // Delay the sprite rollout and wait for the number rollout to finish
             StartCoroutine(DelayedRollSprites(rolledNumber, inputNumber));
+
+            // Add stat entry for the initiated random roll
+            AddStatEntry("Perks: Gamble", new List<int> { rolledNumber });
         }
         else
         {
             // Show error message if input is not valid
             SetErrorMessage("Invalid input. Please enter a number between 1 and " + spritePrefabs.Length + ".");
         }
+    }
+    private void AddStatEntry(string title, List<int> results)
+    {
+        // Use the StatsManagerSingleton to add the entry
+        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
     }
     public void SetErrorMessage(string message)
     {
@@ -253,6 +267,9 @@ public class SpriteManager : MonoBehaviour
 
         // Hide the rolled number text field after the duration
         rolledNumberText.gameObject.SetActive(false);
+
+        // Add the rolled number to StatsManagerSingleton without specifying the outcome
+        StatsManagerSingleton.Instance.AddResult("Perks:Set No.", rolledNumber);
     }
     private void ClearSprites()
     {

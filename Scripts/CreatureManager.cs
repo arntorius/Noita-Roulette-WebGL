@@ -380,7 +380,9 @@ public class CreatureManager : MonoBehaviour
             completionText.gameObject.SetActive(true);
         }
 
-        // ... you can add any additional actions here
+        // Add the results to the stats
+        StatsManagerSingleton.Instance.AddBountyHuntResult(numSprites * 3);
+
     }
 
     // Method to check if all additional sprites are spawned

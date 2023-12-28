@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,7 +69,11 @@ public class PerksJustNumbers : MonoBehaviour
         RectTransform rectTransform = customErrorMessageText.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(errorMessageOffsetX, rectTransform.anchoredPosition.y);
     }
-
+    private void AddStatEntry(string title, List<int> results)
+    {
+        // Use the StatsManagerSingleton to add the entry
+        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
+    }
     void OnRollButtonClick()
     {
         // Get the max value from the input field
@@ -91,15 +96,20 @@ public class PerksJustNumbers : MonoBehaviour
         {
             // Handle invalid input (non-integer input) and set the error message
             Debug.LogError("Invalid input. Please enter a valid number between 0 and 103.");
-            spriteManager.SetErrorMessage("Invalid input. Please enter a valid number between 0 and 103.");
+            SetErrorMessage("Invalid input. Please enter a valid number between 0 and 103.");
         }
     }
+
 
 
     public void TaskOnClick2()
     {
         running = 0;
+
+        // Add stat entry after the roll is stopped
+        AddStatEntry("Perks: Just the No.", new List<int> { roll });
     }
+
 
     // Set the selected value to the text component
     public void SetValueText(int value)

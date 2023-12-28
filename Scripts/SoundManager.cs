@@ -17,7 +17,7 @@ public class SoundManager : MonoBehaviour
     {
         if (!PlayerPrefs.HasKey("musicVolume"))
         {
-            PlayerPrefs.SetFloat("musicVolume", 0.25f);
+            PlayerPrefs.SetFloat("musicVolume", 0.15f);
             Load();
             isFirstStartup = true; // Set isFirstStartup to true only during the first startup
         }
@@ -84,8 +84,8 @@ public class SoundManager : MonoBehaviour
         // Set slider to 0.25 on first startup
         if (isFirstStartup)
         {
-            volumeSlider.value = 0.25f;
-            AudioListener.volume = 0.25f;
+            volumeSlider.value = 0.15f;
+            AudioListener.volume = 0.15f;
             Save();
             isFirstStartup = false; // Reset isFirstStartup after setting the default value
         }

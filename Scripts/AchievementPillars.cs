@@ -7,18 +7,21 @@ public class AchievementPillars : MonoBehaviour
 {
     public Button backButton;
     public Button rollButton;
-    public Button stopRollButton; // Assignable in Inspector
+    public Button stopRollButton;
     public GameObject spriteContainer;
     public string spritePrefabsFolderPath = "Sprites/Achievement Cards/Prefabs";
-    public AudioClip rollAudioClip; // Assignable in Inspector
-    public float rollAudioPitch = 1.0f; // Adjust this pitch in the inspector
+    public AudioClip rollAudioClip;
+    public float rollAudioPitch = 1.0f;
 
     private List<GameObject> spritePrefabs;
     private List<int> spriteWeights;
     private bool isRolling = false;
     private AudioSource rollAudioSource;
+    private GameObject selectedSpritePrefab; // Added variable to store the selected sprite prefab
 
-    private float rollSpeed = 10f; // Adjust this value to control the roll speed directly
+
+    private float rollSpeed = 10f;
+    private string displayedPrefabFilename; // Added variable to store the displayed prefab filename
 
     private void Start()
     {
@@ -35,7 +38,7 @@ public class AchievementPillars : MonoBehaviour
         rollAudioSource.loop = true;
 
         rollButton.onClick.AddListener(RollSprites);
-        stopRollButton.onClick.AddListener(StopRoll);
+        stopRollButton.onClick.AddListener(StopAndReset);  // Use stopRollButton.onClick instead of backButton.onClick
         backButton.onClick.AddListener(StopAndReset);
     }
     private void StopAndReset()
@@ -43,7 +46,17 @@ public class AchievementPillars : MonoBehaviour
         StopAllAudioSources();
         StopRoll();
         ResetState();
+
+        // Add the stat entry after stopping the roll
+       // AddStatEntry("Achievement Pillars", new List<int> { GetDisplayedPrefabIndex() }, GetDisplayedPrefabFilename());
     }
+
+    private void AddStatEntry(string title, List<int> results, string filename)
+    {
+        // Add the result to the stats manager
+        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results, filename);
+    }
+
     private void StopAllAudioSources()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -52,12 +65,13 @@ public class AchievementPillars : MonoBehaviour
             audioSource.Stop();
         }
     }
+
     private void ResetState()
     {
-        // Reset any state variables or perform cleanup here
         isRolling = false;
-       
+        displayedPrefabFilename = null;
     }
+
     private void LoadSpritePrefabsFromFolder()
     {
         Object[] loadedPrefabs = Resources.LoadAll(spritePrefabsFolderPath, typeof(GameObject));
@@ -82,7 +96,6 @@ public class AchievementPillars : MonoBehaviour
             return;
         }
 
-        // Shuffle the list to ensure a random order
         Shuffle(spritePrefabs);
 
         StartCoroutine(RollAnimation());
@@ -125,13 +138,20 @@ public class AchievementPillars : MonoBehaviour
                 Destroy(child.gameObject);
             }
 
+            // Store the selected sprite prefab
+            selectedSpritePrefab = spritePrefabs[currentIndex];
+
             DisplaySpritePrefabWithFrame(currentIndex);
 
             yield return null;
         }
 
         rollAudioSource.Stop();
+
+        // After rolling is complete, add the stat entry with the filename
+        // AddStatEntry("Achievement Pillars", new List<int> { GetDisplayedPrefabIndex() }, GetDisplayedPrefabFilename());
     }
+
 
     private int WeightedRandomIndex()
     {
@@ -168,7 +188,6 @@ public class AchievementPillars : MonoBehaviour
             GameObject spriteObject = Instantiate(spritePrefabs[index], spriteContainer.transform);
             spriteObject.name = "SpriteObject";
 
-            // Add a one-pixel black shaded frame
             Material frameMaterial = new Material(Shader.Find("Standard"));
             frameMaterial.color = Color.black;
 
@@ -176,6 +195,9 @@ public class AchievementPillars : MonoBehaviour
             frameObject.transform.SetParent(spriteObject.transform);
             frameObject.AddComponent<SpriteRenderer>().sprite = spriteObject.GetComponent<SpriteRenderer>().sprite;
             frameObject.GetComponent<SpriteRenderer>().material = frameMaterial;
+
+            // Set the displayed prefab filename
+            displayedPrefabFilename = spriteObject.name;
         }
         else
         {
@@ -183,9 +205,41 @@ public class AchievementPillars : MonoBehaviour
         }
     }
 
+
     private void StopRoll()
     {
         isRolling = false;
         rollAudioSource.Stop();
     }
+
+    private int GetDisplayedPrefabIndex()
+    {
+        // Find the index of the displayed prefab in the original list
+        int index = spritePrefabs.FindIndex(obj => obj.name == selectedSpritePrefab.name);
+        return index;
+    }
+
+    private string GetDisplayedPrefabFilename()
+    {
+        // Extract the filename of the displayed prefab
+        if (spriteContainer.transform.childCount > 0)
+        {
+            Transform child = spriteContainer.transform.GetChild(0);
+            if (child != null)
+            {
+                SpriteRenderer spriteRenderer = child.GetComponentInChildren<SpriteRenderer>();
+                if (spriteRenderer != null && spriteRenderer.sprite != null)
+                {
+                    string filename = spriteRenderer.sprite.name;
+                    Debug.Log("Displayed Filename: " + filename);
+                    return filename;
+                }
+            }
+        }
+
+        Debug.LogError("Could not get displayed prefab filename!");
+        return null;
+    }
+
 }
+

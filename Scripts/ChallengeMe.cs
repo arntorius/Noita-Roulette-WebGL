@@ -21,6 +21,7 @@ public class ChallengeMe : MonoBehaviour
     public RectTransform challengeTextRect;
     public Dropdown challengeDropdown;
 
+
     // Font size settings
     public int minFontSize = 12;
     public int maxFontSize = 24;
@@ -117,21 +118,21 @@ public class ChallengeMe : MonoBehaviour
     }
 
 
-        // This function is called when the "Delete Challenge" button is clicked
-        public void DeleteChallenge()
-        {
-            // Get the index of the challenge to delete
-            int index = challengeDropdown.value;
+    // This function is called when the "Delete Challenge" button is clicked
+    public void DeleteChallenge()
+    {
+        // Get the index of the challenge to delete
+        int index = challengeDropdown.value;
 
-            // Remove the challenge from the list
-            Texts.RemoveAt(index);
+        // Remove the challenge from the list
+        Texts.RemoveAt(index);
 
-            // Update the dropdown menu
-            UpdateDropdown();
+        // Update the dropdown menu
+        UpdateDropdown();
 
-            // Save the challenges to PlayerPrefs
-            SaveChallenges();
-        }
+        // Save the challenges to PlayerPrefs
+        SaveChallenges();
+    }
 
     // This function updates the options in the challenge dropdown menu
     private void UpdateDropdown()
@@ -176,13 +177,13 @@ public class ChallengeMe : MonoBehaviour
 
     // This function saves the challenges to PlayerPrefs
     private void SaveChallenges()
-        {
-            // Convert the list of challenges to a string
-            string challenges = string.Join(",", Texts.ToArray());
+    {
+        // Convert the list of challenges to a string
+        string challenges = string.Join(",", Texts.ToArray());
 
-            // Save the challenges string to PlayerPrefs
-            PlayerPrefs.SetString(CHALLENGE_KEY, challenges);
-        }
+        // Save the challenges string to PlayerPrefs
+        PlayerPrefs.SetString(CHALLENGE_KEY, challenges);
+    }
 
     // This function loads the challenges from PlayerPrefs
     // This function loads the challenges from PlayerPrefs

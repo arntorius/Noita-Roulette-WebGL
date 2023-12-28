@@ -196,11 +196,31 @@ public class WandManager : MonoBehaviour
     {
         numSprites = Random.Range(7, 21);
         StartCoroutine(PlaceSpritePrefabs(numSprites));
+
+        // Add the entry to the stats
+        AddWandRouletteStatEntry(numSprites);
+
         resultText.text = "Number of Slots: " + numSprites.ToString();
         currentReroll = 0; // Reset the reroll counter when spawning new sprites
         rerollButton.interactable = true; // Enable the reroll button when spawning new sprites
         UpdateRerollButtonText(); // Update the reroll button text at the start
     }
+
+    private void AddWandRouletteStatEntry(int numberOfSlots)
+    {
+        // Access the StatsManagerSingleton instance
+        StatsManagerSingleton statsManager = StatsManagerSingleton.Instance;
+
+        // Define the title for the entry
+        string title = "The Wand Roulette ";
+
+        // Define the results as a list containing the number of slots
+        List<int> results = new List<int> { numberOfSlots };
+
+        // Add the entry to the stats
+        statsManager.AddRouletteStatEntry(title, results);
+    }
+
     private void OnPrintButtonPress()
     {
         StartCoroutine(DelayedPrint());
