@@ -1,0 +1,12 @@
+const tar = require('tar')
+
+tar.x({
+  file: 'archive.tgz',
+  filter: (file, entry) => {
+    if (entry.type === 'SymbolicLink') {
+      return false
+    } else {
+      return true
+    }
+  }
+})
