@@ -134,15 +134,20 @@ public class CustomRoulette : MonoBehaviour
         overallRollButton.gameObject.SetActive(false);
         overallStopButton.gameObject.SetActive(true);
 
+        // If the coroutine is already running, stop it
+        if (running[index] == 1)
+        {
+            StopCoroutine(Runner(index));
+        }
+
         rolls[index] = UnityEngine.Random.Range(0, maxValues[index] + 1);
         rollTexts[index].text = rolls[index].ToString();
 
-        if (running[index] == 0)
-        {
-            running[index] = 1;
-            StartCoroutine(Runner(index));
-        }
+        // Start the coroutine
+        running[index] = 1;
+        StartCoroutine(Runner(index));
     }
+
 
     void TaskOnClick2(int index)
     {

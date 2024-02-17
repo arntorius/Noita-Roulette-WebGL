@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class PillarAnimation : MonoBehaviour
 {
-    public Button button; // Assign the button in the Inspector
+    public Button stopButton; // Assign the button in the Inspector
+    public Button rerollButton;
+    public Button backButton;
     public int minNumberOfSprites = 3; // Minimum number of sprites
     public int maxNumberOfSprites = 5; // Maximum number of sprites
     public Transform spriteContainer; // Assign the container in the Inspector
@@ -14,18 +16,39 @@ public class PillarAnimation : MonoBehaviour
 
     private GameObject[] spritePrefabs;
     private GameObject[] secondSpritePrefabs;
+    private Coroutine spawnCoroutine; // Reference to the coroutine responsible for spawning sprites
+    private float xOffset = 0.569999993f;
+    private int rolloutCount = 0;
+    private bool isRolloutInProgress = false;
 
     void Start()
     {
         LoadSpritePrefabs();
 
-        if (button != null)
+        if (stopButton != null)
         {
-            button.onClick.AddListener(OnButtonPress);
+            stopButton.onClick.AddListener(OnStopButtonPress);
         }
         else
         {
-            Debug.LogError("Button component not found. Make sure the script is attached to a GameObject with a Button component.");
+            Debug.LogError("Stop Button component not found. Make sure the script is attached to a GameObject with a Button component.");
+        }
+
+        if (rerollButton != null)
+        {
+            rerollButton.onClick.AddListener(OnRerollButtonPress);
+        }
+        else
+        {
+            Debug.LogError("Reroll Button component not found. Make sure the script is attached to a GameObject with a Button component.");
+        }
+        if (backButton != null)
+        {
+            backButton.onClick.AddListener(OnRerollButtonPress);
+        }
+        else
+        {
+            Debug.LogError("Back Button component not found. Make sure the script is attached to a GameObject with a Button component.");
         }
     }
 
@@ -50,42 +73,59 @@ public class PillarAnimation : MonoBehaviour
         }
     }
 
-    void OnButtonPress()
+    void OnStopButtonPress()
     {
-        StartCoroutine(SpawnSpritesAsync());
+        if (!isRolloutInProgress)
+        {
+            Vector3 offset;
+            if (rolloutCount == 0)
+                offset = Vector3.zero;
+            else if (rolloutCount == 1)
+                offset = new Vector3(-0.33f, 0f, 0f);
+            else
+                offset = new Vector3(-0.8f, 0f, 0f);
+
+            spawnCoroutine = StartCoroutine(SpawnSpritesAsync(offset));
+            rolloutCount++;
+        }
     }
 
-    IEnumerator SpawnSpritesAsync()
+    void OnRerollButtonPress()
     {
-        // Clear existing sprites
+        if (isRolloutInProgress)
+        {
+            StopCoroutine(spawnCoroutine);
+            ClearSprites();
+            rolloutCount = 0;
+            isRolloutInProgress = false;
+        }
         ClearSprites();
+        rolloutCount = 0;
+    }
 
-        float yOffset = 0.44f; // Add this line to declare yOffset
+    IEnumerator SpawnSpritesAsync(Vector3 offset)
+    {
+        isRolloutInProgress = true;
 
-        // Generate a random number for the number of displayed sprites
+        float yOffset = 0.44f;
+
         int numberOfSprites = Random.Range(minNumberOfSprites, Mathf.Min(maxNumberOfSprites, spritePrefabs.Length) + 1);
 
         for (int i = 0; i < numberOfSprites; i++)
         {
-            // Load a random sprite prefab from the first folder path
             GameObject randomSpritePrefab = spritePrefabs[Random.Range(0, spritePrefabs.Length)];
 
             if (randomSpritePrefab != null)
             {
-                // Specify starting position for each sprite
-                float xOffset = 0.569999993f;
                 float zOffset = 0.620000005f;
-                Vector3 startPosition = new Vector3(xOffset, yOffset, zOffset);
+                Vector3 startPosition = new Vector3(xOffset, yOffset, zOffset) + offset;
 
-                // Specify target position for each sprite
-                float targetYOffset = -0.340000004f + i * 0.085f; // Adjust the offset as needed
-                Vector3 targetPosition = new Vector3(xOffset, targetYOffset, zOffset);
+                float targetYOffset = -0.340000004f + i * 0.085f;
+                Vector3 targetPosition = new Vector3(xOffset, targetYOffset, zOffset) + offset;
 
-                // Instantiate sprite at the starting position
                 GameObject newSprite = Instantiate(randomSpritePrefab, startPosition, Quaternion.identity);
                 newSprite.transform.parent = spriteContainer != null ? spriteContainer : transform;
 
-                // Smoothly interpolate to the target position (falling animation)
                 float elapsedTime = 0f;
                 while (elapsedTime < fallDuration)
                 {
@@ -94,7 +134,6 @@ public class PillarAnimation : MonoBehaviour
                     yield return null;
                 }
 
-                // Ensure the sprite is at the exact target position
                 newSprite.transform.position = targetPosition;
             }
             else
@@ -102,30 +141,23 @@ public class PillarAnimation : MonoBehaviour
                 Debug.LogError("Failed to load random sprite prefab from the first folder path.");
             }
 
-            // Introduce a delay before spawning the next sprite
             yield return new WaitForSeconds(fallDuration);
         }
 
-        // Load a random sprite prefab from the second folder path
         GameObject secondRandomSpritePrefab = secondSpritePrefabs[Random.Range(0, secondSpritePrefabs.Length)];
 
         if (secondRandomSpritePrefab != null)
         {
-            // Specify starting position for the second sprite
-            float secondXOffset = 0.569999993f;
-            float secondYOffset = -0.340000004f + numberOfSprites * 0.085f; // Place it above the very last sprite
+            float secondYOffset = -0.340000004f + numberOfSprites * 0.085f;
             float secondZOffset = 0.620000005f;
-            Vector3 secondStartPosition = new Vector3(secondXOffset, yOffset, secondZOffset); // Use the same yOffset as the first folder path
+            Vector3 secondStartPosition = new Vector3(xOffset, yOffset, secondZOffset) + offset;
 
-            // Specify target position for the second sprite
-            float secondTargetYOffset = secondYOffset + 0.0f; // Adjust the offset as needed
-            Vector3 secondTargetPosition = new Vector3(secondXOffset, secondTargetYOffset, secondZOffset);
+            float secondTargetYOffset = secondYOffset + 0.0f;
+            Vector3 secondTargetPosition = new Vector3(xOffset, secondTargetYOffset, secondZOffset) + offset;
 
-            // Instantiate the second sprite at the starting position
             GameObject secondNewSprite = Instantiate(secondRandomSpritePrefab, secondStartPosition, Quaternion.identity);
             secondNewSprite.transform.parent = spriteContainer != null ? spriteContainer : transform;
 
-            // Smoothly interpolate to the target position (falling animation)
             float secondElapsedTime = 0f;
             while (secondElapsedTime < fallDuration)
             {
@@ -134,15 +166,15 @@ public class PillarAnimation : MonoBehaviour
                 yield return null;
             }
 
-            // Ensure the second sprite is at the exact target position
             secondNewSprite.transform.position = secondTargetPosition;
         }
         else
         {
             Debug.LogError("Failed to load random sprite prefab from the second folder path.");
         }
-    }
 
+        isRolloutInProgress = false;
+    }
 
     void ClearSprites()
     {
