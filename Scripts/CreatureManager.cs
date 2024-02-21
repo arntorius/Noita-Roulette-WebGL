@@ -381,7 +381,7 @@ public class CreatureManager : MonoBehaviour
         }
 
         // Add the results to the stats
-        StatsManagerSingleton.Instance.AddBountyHuntResult(numSprites * 3);
+        // StatsManagerSingleton.Instance.AddBountyHuntResult(numSprites * 3);
 
     }
 

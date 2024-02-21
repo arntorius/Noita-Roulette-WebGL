@@ -94,28 +94,28 @@ public class StatsManagerSingleton : MonoBehaviour
     }
 
 
-    public void AddBountyHuntResult(int numCreatures)
-    {
-        string title = "The Bounty Hunt";
-        List<int> results = new List<int> { numCreatures };
-        AddRouletteStatEntry(title, results);
-    }
+    // public void AddBountyHuntResult(int numCreatures)
+    // {
+       // string title = "The Bounty Hunt";
+       // List<int> results = new List<int> { numCreatures };
+       // AddRouletteStatEntry(title, results);
+    // }
 
-    public void AddResult(string title, int result)
-    {
-        RouletteStatEntry existingEntry = rouletteStats.Find(entry => entry.title == title);
+   // public void AddResult(string title, int result)
+    //{
+      //  RouletteStatEntry existingEntry = rouletteStats.Find(entry => entry.title == title);
 
-        if (existingEntry != null)
-        {
-            existingEntry.results = new List<int> { result };
+        //if (existingEntry != null)
+        //{
+          //  existingEntry.results = new List<int> { result };
             
-            SaveStatsToPlayerPrefs();
-        }
-        else
-        {
-            AddRouletteStatEntry(title, new List<int> { result });
-        }
-    }
+            //SaveStatsToPlayerPrefs();
+        //}
+        //else
+        //{
+           // AddRouletteStatEntry(title, new List<int> { result });
+        //}
+    //}
 
     public void DeleteRouletteStatEntry(int index)
     {

@@ -72,7 +72,7 @@ public class PerksJustNumbers : MonoBehaviour
     private void AddStatEntry(string title, List<int> results)
     {
         // Use the StatsManagerSingleton to add the entry
-        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
+        // StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
     }
     void OnRollButtonClick()
     {

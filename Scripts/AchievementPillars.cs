@@ -15,21 +15,21 @@ public class AchievementPillars : MonoBehaviour
     public string spritePrefabsFolderPath = "Sprites/Achievement Cards/Prefabs";
     public AudioClip rollAudioClip;
     public float rollAudioPitch = 1.0f;
+    public ClickedStateData clickedStateData; // Reference to the ClickedStateData scriptable object
 
     private List<GameObject> spritePrefabs;
-    private List<GameObject> availableSpritePrefabs; // New list to store available sprite prefabs
+    private List<GameObject> availableSpritePrefabs;
     private List<int> spriteWeights;
     private bool isRolling = false;
     private AudioSource rollAudioSource;
-    private GameObject selectedSpritePrefab; // Added variable to store the selected sprite prefab
+    private GameObject selectedSpritePrefab;
     private int pillarsAdded = 0;
-    public int maxPillars = 2; // Maximum number of pillars allowed
-
-    private int addPillarButtonPressCount = 0; // Counter to track the number of times "Add Pillar" button is pressed
+    public int maxPillars = 2;
+    private int addPillarButtonPressCount = 0;
     public Text notificationText;
-
-    private float rollSpeed = 10f;
-    private string displayedPrefabFilename; // Added variable to store the displayed prefab filename
+    private float rollSpeed = 20f;
+    private string displayedPrefabFilename;
+    private bool isFirstPillarAdded = true;
 
     private void Start()
     {
@@ -38,9 +38,8 @@ public class AchievementPillars : MonoBehaviour
             Debug.LogError("Sprite Container is not assigned!");
             return;
         }
-
         spritePrefabs = new List<GameObject>();
-        availableSpritePrefabs = new List<GameObject>(); // Initialize available sprite prefabs list
+        availableSpritePrefabs = new List<GameObject>();
         spriteWeights = new List<int>();
 
         rollAudioSource = gameObject.AddComponent<AudioSource>();
@@ -71,7 +70,6 @@ public class AchievementPillars : MonoBehaviour
         StopRoll();
         ResetState();
     }
-
     private void ReRollSprites()
     {
         ClearNewContainer();
@@ -80,6 +78,11 @@ public class AchievementPillars : MonoBehaviour
         isFirstPillarAdded = true;
         ResetState();
         StopRoll();
+
+        // Clear the available sprite prefabs list and reload all unclicked sprite prefabs
+        availableSpritePrefabs.Clear();
+        LoadSpritePrefabsFromFolder();
+
         StartCoroutine(RollAnimation());
     }
 
@@ -91,7 +94,6 @@ public class AchievementPillars : MonoBehaviour
         }
     }
 
-    private bool isFirstPillarAdded = true;
     private void AddPillar()
     {
         if (pillarsAdded >= maxPillars)
@@ -99,10 +101,9 @@ public class AchievementPillars : MonoBehaviour
             Debug.Log("Maximum number of pillars reached!");
             if (notificationText != null)
             {
-                notificationText.text = "thats enough";
+                notificationText.text = "That's enough";
             }
 
-            // Hide the stop button and show the reroll button
             stopRollButton.gameObject.SetActive(false);
             reRollButton.gameObject.SetActive(true);
 
@@ -126,7 +127,7 @@ public class AchievementPillars : MonoBehaviour
         if (displayedSprite != null)
         {
             GameObject newSpriteObject = Instantiate(displayedSprite, newContainer.transform);
-            newSpriteObject.name = "SpriteObject";
+            newSpriteObject.name = displayedSprite.name; // Set the name to the original sprite prefab name
 
             if (isFirstPillarAdded)
             {
@@ -152,7 +153,6 @@ public class AchievementPillars : MonoBehaviour
         StopRoll();
         StartCoroutine(RollAnimation());
     }
-
 
     private GameObject GetDisplayedSprite()
     {
@@ -199,12 +199,6 @@ public class AchievementPillars : MonoBehaviour
         }
     }
 
-    private void AddStatEntry(string title, List<int> results, string filename)
-    {
-        // Add the result to the stats manager
-        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results, filename);
-    }
-
     private void StopAllAudioSources()
     {
         AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -228,9 +222,14 @@ public class AchievementPillars : MonoBehaviour
         {
             if (obj is GameObject)
             {
-                spritePrefabs.Add(obj as GameObject);
-                availableSpritePrefabs.Add(obj as GameObject); // Add to available sprite prefabs list
-                spriteWeights.Add(spritePrefabs.Count);
+                GameObject prefab = obj as GameObject;
+                string spriteName = prefab.name;
+                if (!clickedStateData.GetClickedState(spriteName)) // Exclude clicked sprites
+                {
+                    spritePrefabs.Add(prefab);
+                    availableSpritePrefabs.Add(prefab);
+                    spriteWeights.Add(spritePrefabs.Count);
+                }
             }
         }
     }
@@ -245,7 +244,6 @@ public class AchievementPillars : MonoBehaviour
             return;
         }
 
-        // Shuffle the available sprite prefabs list to introduce randomness
         Shuffle(availableSpritePrefabs);
 
         StartCoroutine(RollAnimation());
@@ -264,23 +262,30 @@ public class AchievementPillars : MonoBehaviour
             list[n] = value;
         }
     }
-
     private IEnumerator RollAnimation()
     {
+        // Destroy any existing sprite objects in the container
         foreach (Transform child in spriteContainer.transform)
         {
             Destroy(child.gameObject);
         }
 
+        // Set rolling flag to true
         isRolling = true;
 
+        // Play the roll audio clip
         rollAudioSource.clip = rollAudioClip;
         rollAudioSource.pitch = rollAudioPitch;
         rollAudioSource.Play();
 
+        // Disable colliders while rolling
+        SetCollidersEnabled(false);
+
+        // Loop while rolling
         while (isRolling)
         {
             float progress = Time.time * rollSpeed;
+            Debug.Log("Progress: " + progress + ", Roll Speed: " + rollSpeed);
 
             int currentIndex = Mathf.FloorToInt(progress) % availableSpritePrefabs.Count;
 
@@ -291,29 +296,25 @@ public class AchievementPillars : MonoBehaviour
 
             selectedSpritePrefab = availableSpritePrefabs[currentIndex];
 
-            DisplaySpritePrefabWithFrame(selectedSpritePrefab);
+            DisplaySpritePrefabWithoutFrame(selectedSpritePrefab);
 
             yield return null;
         }
 
+
+        // Re-enable colliders after rolling
+        SetCollidersEnabled(true);
+
+        // Stop the roll audio
         rollAudioSource.Stop();
     }
 
-    private void DisplaySpritePrefabWithFrame(GameObject prefab)
+    private void DisplaySpritePrefabWithoutFrame(GameObject prefab)
     {
         if (prefab != null)
         {
             GameObject spriteObject = Instantiate(prefab, spriteContainer.transform);
-            spriteObject.name = "SpriteObject";
-
-            Material frameMaterial = new Material(Shader.Find("Standard"));
-            frameMaterial.color = Color.black;
-
-            GameObject frameObject = new GameObject("FrameObject");
-            frameObject.transform.SetParent(spriteObject.transform);
-            frameObject.AddComponent<SpriteRenderer>().sprite = spriteObject.GetComponent<SpriteRenderer>().sprite;
-            frameObject.GetComponent<SpriteRenderer>().material = frameMaterial;
-
+            spriteObject.name = prefab.name; // Set the name to the original sprite prefab name
             displayedPrefabFilename = spriteObject.name;
         }
         else
@@ -326,5 +327,17 @@ public class AchievementPillars : MonoBehaviour
     {
         isRolling = false;
         rollAudioSource.Stop();
+    }
+
+    private void SetCollidersEnabled(bool enabled)
+    {
+        foreach (var spritePrefab in availableSpritePrefabs)
+        {
+            Collider2D collider = spritePrefab.GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = enabled;
+            }
+        }
     }
 }

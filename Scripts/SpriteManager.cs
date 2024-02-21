@@ -129,7 +129,7 @@ public class SpriteManager : MonoBehaviour
             rollingCoroutine = StartCoroutine(RollSprites(totalSprites));
 
             // Add stat entry for the initiated roll
-            AddStatEntry("Perks: Give set No.", new List<int> { inputNumber });
+            // AddStatEntry("Perks: Give set No.", new List<int> { inputNumber });
         }
         else
         {
@@ -152,7 +152,7 @@ public class SpriteManager : MonoBehaviour
             StartCoroutine(DelayedRollSprites(rolledNumber, inputNumber));
 
             // Add stat entry for the initiated random roll
-            AddStatEntry("Perks: Gamble", new List<int> { rolledNumber });
+            // AddStatEntry("Perks: Gamble", new List<int> { rolledNumber });
         }
         else
         {
@@ -160,11 +160,11 @@ public class SpriteManager : MonoBehaviour
             SetErrorMessage("Invalid input. Please enter a number between 1 and " + spritePrefabs.Length + ".");
         }
     }
-    private void AddStatEntry(string title, List<int> results)
-    {
+   // private void AddStatEntry(string title, List<int> results)
+   // {
         // Use the StatsManagerSingleton to add the entry
-        StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
-    }
+        // StatsManagerSingleton.Instance.AddRouletteStatEntry(title, results);
+   // }
     public void SetErrorMessage(string message)
     {
         // Set the error message and enable the Text component
@@ -269,7 +269,7 @@ public class SpriteManager : MonoBehaviour
         rolledNumberText.gameObject.SetActive(false);
 
         // Add the rolled number to StatsManagerSingleton without specifying the outcome
-        StatsManagerSingleton.Instance.AddResult("Perks:Set No.", rolledNumber);
+        //StatsManagerSingleton.Instance.AddResult("Perks:Set No.", rolledNumber);
     }
     private void ClearSprites()
     {

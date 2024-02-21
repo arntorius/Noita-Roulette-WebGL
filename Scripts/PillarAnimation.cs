@@ -100,7 +100,7 @@ public class PillarAnimation : MonoBehaviour
             isRolloutInProgress = false;
         }
         ClearSprites();
-        rolloutCount = 0;
+        rolloutCount = 0; 
     }
 
     IEnumerator SpawnSpritesAsync(Vector3 offset)

@@ -209,16 +209,16 @@ public class WandManager : MonoBehaviour
     private void AddWandRouletteStatEntry(int numberOfSlots)
     {
         // Access the StatsManagerSingleton instance
-        StatsManagerSingleton statsManager = StatsManagerSingleton.Instance;
+        // StatsManagerSingleton statsManager = StatsManagerSingleton.Instance;
 
         // Define the title for the entry
-        string title = "The Wand Roulette ";
+        // string title = "The Wand Roulette ";
 
         // Define the results as a list containing the number of slots
-        List<int> results = new List<int> { numberOfSlots };
+        // List<int> results = new List<int> { numberOfSlots };
 
         // Add the entry to the stats
-        statsManager.AddRouletteStatEntry(title, results);
+        // statsManager.AddRouletteStatEntry(title, results);
     }
 
     private void OnPrintButtonPress()
