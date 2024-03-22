@@ -122,7 +122,7 @@ Material:
     - _SupportDecals: 1
     - _TransparentZWrite: 0
     - _UVSec: 0
-    - _UnscaledTime: 36.537308
+    - _UnscaledTime: 19.900904
     - _UseUIAlphaClip: 0
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4

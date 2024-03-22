@@ -32,7 +32,7 @@ public class RouletteRoll : MonoBehaviour
         {
             for (int i = 0; i < TextBoxes.Length; i++)
             {
-                theNumbers[i] = Random.Range(1, 12);
+                theNumbers[i] = Random.Range(0, 12);
                 TextBoxes[i].GetComponent<Text>().text = theNumbers[i].ToString();
             }
 
