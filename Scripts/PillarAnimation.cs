@@ -20,6 +20,7 @@ public class PillarAnimation : MonoBehaviour
     private float xOffset = 0.569999993f;
     private int rolloutCount = 0;
     private bool isRolloutInProgress = false;
+    private int stopButtonPressCount = 0; // Counter for stop button presses
 
     void Start()
     {
@@ -75,7 +76,7 @@ public class PillarAnimation : MonoBehaviour
 
     void OnStopButtonPress()
     {
-        if (!isRolloutInProgress)
+        if (!isRolloutInProgress && stopButtonPressCount < 3) // Check if the stop button has been pressed less than 3 times
         {
             Vector3 offset;
             if (rolloutCount == 0)
@@ -87,6 +88,7 @@ public class PillarAnimation : MonoBehaviour
 
             spawnCoroutine = StartCoroutine(SpawnSpritesAsync(offset));
             rolloutCount++;
+            stopButtonPressCount++; // Increment the stop button press count
         }
     }
 
@@ -100,7 +102,8 @@ public class PillarAnimation : MonoBehaviour
             isRolloutInProgress = false;
         }
         ClearSprites();
-        rolloutCount = 0; 
+        rolloutCount = 0;
+        stopButtonPressCount = 0; // Reset the stop button press count
     }
 
     IEnumerator SpawnSpritesAsync(Vector3 offset)

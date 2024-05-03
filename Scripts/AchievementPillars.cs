@@ -9,6 +9,7 @@ public class AchievementPillars : MonoBehaviour
     public Button rollButton;
     public Button stopRollButton;
     public Button reRollButton;
+    public Button reRollButtonSingle;
     public Button addPillarButton;
     public GameObject spriteContainer;
     public GameObject newContainer;
@@ -47,6 +48,7 @@ public class AchievementPillars : MonoBehaviour
         addPillarButton.interactable = (pillarsAdded < maxPillars);
 
         rollButton.onClick.AddListener(RollSprites);
+        reRollButtonSingle.onClick.AddListener(RerollLastSprite);
         stopRollButton.onClick.AddListener(StopAndReset);
         backButton.onClick.AddListener(StopRollAndReset);
         reRollButton.onClick.AddListener(ReRollSprites);
@@ -85,6 +87,34 @@ public class AchievementPillars : MonoBehaviour
 
         StartCoroutine(RollAnimation());
     }
+    private void RerollLastSprite()
+    {
+        if (availableSpritePrefabs.Count == 0)
+        {
+            Debug.LogError("No available sprite prefabs found!");
+            return;
+        }
+
+        // Get the last sprite displayed on the screen
+        GameObject lastSprite = GetDisplayedSprite();
+        if (lastSprite != null)
+        {
+            // Remove the last sprite from the screen
+            Destroy(lastSprite);
+
+            // Roll a new sprite and display it at the same position
+            int newIndex = Random.Range(0, availableSpritePrefabs.Count);
+            selectedSpritePrefab = availableSpritePrefabs[newIndex];
+            DisplaySpritePrefabWithoutFrame(selectedSpritePrefab);
+
+            // Trigger the roll animation
+            StartCoroutine(RollAnimation());
+        }
+        else
+        {
+            Debug.LogError("Last sprite not found!");
+        }
+    }
 
     private void ClearNewContainer()
     {
@@ -106,6 +136,7 @@ public class AchievementPillars : MonoBehaviour
 
             stopRollButton.gameObject.SetActive(false);
             reRollButton.gameObject.SetActive(true);
+            reRollButtonSingle.gameObject.SetActive(true);
 
             return;
         }
