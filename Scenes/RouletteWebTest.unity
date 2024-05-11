@@ -12331,7 +12331,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'note: there are only 15 unique bosses, 16-20 are used for NG+ or paralell
+  m_Text: 'note: there are only 15 unique bosses, 16-20 are used for NG+ or parallel
     world bosses'
 --- !u!222 &377058353
 CanvasRenderer:
@@ -25580,7 +25580,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.75, y: 0.16}
+  m_AnchoredPosition: {x: 0.71, y: 0.16}
   m_SizeDelta: {x: 453.9499, y: 500.90015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &728646109
@@ -41277,7 +41277,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Customise
+  m_Text: Customize
 --- !u!222 &1192670315
 CanvasRenderer:
   m_ObjectHideFlags: 0
