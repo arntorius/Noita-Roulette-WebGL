@@ -1239,7 +1239,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 876792325}
   m_HandleRect: {fileID: 876792324}
   m_Direction: 2
-  m_Value: 0.95204055
+  m_Value: 1.0000011
   m_Size: 0.34677747
   m_NumberOfSteps: 1
   m_OnValueChanged:
@@ -3326,7 +3326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0069356994, y: 38.5606}
+  m_AnchoredPosition: {x: 0.0069356994, y: -0.005415719}
   m_SizeDelta: {x: 0, y: 1231.05}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1478694646
@@ -3361,24 +3361,25 @@ MonoBehaviour:
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: "Noita Roulette is a app to add some flavour to your noita runs!\r\n\r\nthe
+    m_LineSpacing: 0.7
+  m_Text: "Noita Roulette is a app to add some flavour to your noita runs!\r\n\n\n\r\nthe
     goal is to roll the roulette, \r\n\r\nShifts / Orbs / Bosses\r\n\r\nfullfill
     the task given and win the game!\r (game not included!)\n\r\nexample:  \r\nyou
     click on roll, hit stop - the result: 3 / 5 / 9; \r\nmeans you have to do 3 Fungal
     Shifts, Collect 5 Orbs of true knowlege, \nSlay 9 bosses!\r\n\r\n\r\nTo use:\r\n\r\nclick
-    on the \"Roll\" button for a standard 0-11 roll in each of the 3 categories \n(Shifts/Orbs/Bosses)\r\n\r\nBut
-    wait, theres MORE!!\n\nCustom Roll: you can select each roll (Shifts, Orbs, Bosses)
-    to roll from 0 \nto your selected value.\r\n\nAsk the Gods: you can roll challenges
-    to add to your run. With the \n\"Customise\" button you can add your own challenges
-    and manage all saved \nchallenges.\r\n\r\nPerk Roulette: 3 functions for you
-    to choose how to roll your \"Perkpool\"\nwith some suggested rulesets.\n\nWand
-    Roulette: roll your wand to then build ingame and slay bosses with it!\n\nAlchemy
-    Roulette: Roll the Basic Roulette for simple reciepes to craft, or use the advanced
-    Chain Reaction Roulette to fungal shift your way through alchemy!\n\r\nQuests:\n\nAchievement
-    Pillars: Roll a random achievement pillar and complete it.\n\nBounty Hunt: roll
-    a random set of enemys for you to eliminate.\n\nRandom Quest: Random generated
-    simple quest, \"Bring/Get\" an item/spell/entity to location A then B.\n\n\nGlhf!\n\nnoitaroulette@gmail.com"
+    on the \"Roll\" button for a standard 0-11 roll in each of the 3 categories \n(Shifts/Orbs/Bosses)\r\n\n\r\nBUT
+    WAIT, THERE\xB4S MORE!!\n\nCustom Roll: you can select each roll (Shifts, Orbs,
+    Bosses) to roll from 0 \nto your selected value.\r\n\nAsk the Gods: you can roll
+    challenges to add to your run. With the \n\"Customise\" button you can add your
+    own challenges and manage all saved \nchallenges.\r\n\r\nPerk Roulette: 3 functions
+    for you to choose how to roll your \"Perkpool\"\nwith some suggested rulesets.\n\nWand
+    Roulette: roll your wand to then build ingame and slay bosses with it!\n\nAlchemy:
+    Roll the Basic Roulette for simple reciepes to craft, or use the advanced Chain
+    Reaction Roulette to fungal shift your way through alchemy! And there is the
+    LAB\n\r\nQuests:\n\nAchievement Pillars: Roll a random achievement pillar and
+    complete it.\n\nBounty Hunt: roll a random set of enemys for you to eliminate.\n\nRandom
+    Quest: Random generated simple quest, \"Bring/Get\" an item/spell/entity to location
+    A then B.\n\n\nGlhf!\n\nnoitaroulette@gmail.com"
 --- !u!222 &1478694647
 CanvasRenderer:
   m_ObjectHideFlags: 0
