@@ -9,12 +9,15 @@ public class LABManager : MonoBehaviour
     public Button RollButton;
     public Button BackButton;
     public Button FillButton;
+    public Button LiquidsButton; // Reference to the LiquidsButton
+    public Button PowdersButton; // Reference to the PowdersButton
     public Transform ParentTransform;
     public int MinPrefabs = 1;
     public int MaxPrefabs = 5;
     public int PrefabsPerRow = 15;
     public float PrefabSpacing = 50f;
     public Vector3 PrefabScale = new Vector3(0.05f, 0.05f, 0.05f);
+    public Vector3 PowderScale = new Vector3(0.085f, 0.085f, 0.085f); // 25% bigger scale for powders
     public float PrefabZPosition = -0.3f;
     public float RowOffset = 50f;
     public float SlideInDuration = 0.5f;
@@ -24,16 +27,21 @@ public class LABManager : MonoBehaviour
     public AudioSource audioSource; // Reference to the AudioSource component
 
     public GameObject[] liquidPrefabs;
+    public GameObject[] powderPrefabs;
     public GameObject textLabelPrefab; // Drag your Text prefab here in the Inspector
 
     private List<GameObject> loadedPrefabs = new List<GameObject>();
     private List<GameObject> instantiatedPrefabs = new List<GameObject>();
     private List<GameObject> usedLiquidPrefabs = new List<GameObject>();
+    private List<GameObject> usedPowderPrefabs = new List<GameObject>();
+    private bool drawLiquids = true; // To track whether to draw liquid prefabs or not
+    private bool drawPowders = true; // To track whether to draw powder prefabs or not
 
     void Start()
     {
         loadedPrefabs.AddRange(Resources.LoadAll<GameObject>("Sprites/LAB/LABPrefabs"));
         liquidPrefabs = Resources.LoadAll<GameObject>("Sprites/LAB/Liquids");
+        powderPrefabs = Resources.LoadAll<GameObject>("Sprites/LAB/Powder");
 
         if (RollButton != null)
         {
@@ -48,13 +56,26 @@ public class LABManager : MonoBehaviour
             FillButton.onClick.AddListener(OnFillButtonClicked);
             FillButton.gameObject.SetActive(false);
         }
+        if (LiquidsButton != null)
+        {
+            LiquidsButton.onClick.AddListener(OnLiquidsButtonClicked);
+            LiquidsButton.GetComponentInChildren<Text>().text = drawLiquids ? "Disable Liquids" : "Enable Liquids";
+        }
+        if (PowdersButton != null)
+        {
+            PowdersButton.onClick.AddListener(OnPowdersButtonClicked);
+            PowdersButton.GetComponentInChildren<Text>().text = drawPowders ? "Disable Powders" : "Enable Powders";
+        }
     }
 
     void OnRollButtonClicked()
     {
         ClearPrefabs();
 
-        int numberOfPrefabs = UnityEngine.Random.Range(MinPrefabs, MaxPrefabs + 1); // Use UnityEngine.Random here
+        // Determine max prefabs based on the state of buttons
+        int maxPrefabs = (drawPowders && !drawLiquids) ? 28 : MaxPrefabs;
+        int numberOfPrefabs = UnityEngine.Random.Range(MinPrefabs, maxPrefabs + 1); // Use determined max here
+
         int numberOfRows = Mathf.CeilToInt((float)numberOfPrefabs / PrefabsPerRow);
         float totalHeight = (numberOfRows - 1) * RowOffset;
         float startY = totalHeight / 2;
@@ -92,14 +113,6 @@ public class LABManager : MonoBehaviour
             newPrefab.transform.localPosition = previousPosition;
             StartCoroutine(SlideInAnimation(newPrefab, targetPosition));
 
-            // Instantiate text label prefab only for liquid prefabs
-            if (System.Array.Exists(liquidPrefabs, element => element == prefab))
-            {
-                GameObject newLabel = Instantiate(textLabelPrefab, ParentTransform);
-                newLabel.GetComponent<Text>().text = Path.GetFileNameWithoutExtension(prefab.name);
-                newLabel.transform.position = newPrefab.transform.position + Vector3.up * 0.1f; // Adjust position as needed
-            }
-
             previousPosition = targetPosition;
 
             instantiatedPrefabs.Add(newPrefab);
@@ -126,34 +139,58 @@ public class LABManager : MonoBehaviour
 
     void OnFillButtonClicked()
     {
-        StartCoroutine(FillWithLiquidPrefabs());
+        StartCoroutine(FillWithPrefabs());
         FillButton.interactable = false; // Disable the button after it's been clicked
         FillButton.gameObject.SetActive(false); // Hide the button after it's been clicked
     }
 
-    IEnumerator FillWithLiquidPrefabs()
+    IEnumerator FillWithPrefabs()
     {
         for (int i = 0; i < instantiatedPrefabs.Count; i++)
         {
             yield return new WaitForSeconds(FillDelay);
 
-            GameObject liquidPrefab = GetUnusedLiquidPrefab();
-            GameObject newLiquid = Instantiate(liquidPrefab, ParentTransform);
-            newLiquid.transform.localScale = PrefabScale;
-            newLiquid.transform.localPosition = instantiatedPrefabs[i].transform.localPosition;
-            newLiquid.transform.localPosition += Vector3.back * 0.01f;
+            bool fillWithLiquid = drawLiquids && (!drawPowders || UnityEngine.Random.value > 0.5f);
 
-            newLiquid.transform.localPosition = new Vector3(newLiquid.transform.localPosition.x, newLiquid.transform.localPosition.y, PrefabZPosition);
-
-            usedLiquidPrefabs.Add(liquidPrefab);
-
-            // Instantiate text label prefab for filled liquid prefabs
-            if (System.Array.Exists(liquidPrefabs, element => element == liquidPrefab))
+            if (fillWithLiquid)
             {
-                GameObject newLabel = Instantiate(textLabelPrefab, ParentTransform);
-                newLabel.GetComponent<Text>().text = Path.GetFileNameWithoutExtension(liquidPrefab.name);
-                newLabel.transform.position = newLiquid.transform.position + Vector3.up * 0.075f; // Adjust position as needed
+                GameObject liquidPrefab = GetUnusedLiquidPrefab();
+                GameObject newLiquid = Instantiate(liquidPrefab, ParentTransform);
+                newLiquid.transform.localScale = PrefabScale;
+                newLiquid.transform.localPosition = instantiatedPrefabs[i].transform.localPosition;
+                newLiquid.transform.localPosition += Vector3.back * 0.01f;
 
+                newLiquid.transform.localPosition = new Vector3(newLiquid.transform.localPosition.x, newLiquid.transform.localPosition.y, PrefabZPosition);
+
+                usedLiquidPrefabs.Add(liquidPrefab);
+
+                // Instantiate text label prefab for filled liquid prefabs
+                if (System.Array.Exists(liquidPrefabs, element => element == liquidPrefab))
+                {
+                    GameObject newLabel = Instantiate(textLabelPrefab, ParentTransform);
+                    newLabel.GetComponent<Text>().text = Path.GetFileNameWithoutExtension(liquidPrefab.name);
+                    newLabel.transform.position = newLiquid.transform.position + Vector3.up * 0.075f; // Adjust position as needed
+                }
+            }
+            else if (drawPowders)
+            {
+                GameObject powderPrefab = GetUnusedPowderPrefab();
+                GameObject newPowder = Instantiate(powderPrefab, ParentTransform);
+                newPowder.transform.localScale = PowderScale; // Apply the 25% bigger scale for powders
+                newPowder.transform.localPosition = instantiatedPrefabs[i].transform.localPosition;
+                newPowder.transform.localPosition += Vector3.back * 0.01f;
+
+                newPowder.transform.localPosition = new Vector3(newPowder.transform.localPosition.x, newPowder.transform.localPosition.y, PrefabZPosition);
+
+                usedPowderPrefabs.Add(powderPrefab);
+
+                // Instantiate text label prefab for filled powder prefabs
+                if (System.Array.Exists(powderPrefabs, element => element == powderPrefab))
+                {
+                    GameObject newLabel = Instantiate(textLabelPrefab, ParentTransform);
+                    newLabel.GetComponent<Text>().text = Path.GetFileNameWithoutExtension(powderPrefab.name);
+                    newLabel.transform.position = newPowder.transform.position + Vector3.up * 0.075f; // Adjust position as needed
+                }
             }
         }
     }
@@ -171,6 +208,21 @@ public class LABManager : MonoBehaviour
         }
 
         return liquidPrefabs[UnityEngine.Random.Range(0, liquidPrefabs.Length)]; // Use UnityEngine.Random here
+    }
+
+    GameObject GetUnusedPowderPrefab()
+    {
+        ShuffleArray(powderPrefabs);
+
+        foreach (GameObject powderPrefab in powderPrefabs)
+        {
+            if (!usedPowderPrefabs.Contains(powderPrefab))
+            {
+                return powderPrefab;
+            }
+        }
+
+        return powderPrefabs[UnityEngine.Random.Range(0, powderPrefabs.Length)]; // Use UnityEngine.Random here
     }
 
     void ShuffleArray(GameObject[] array)
@@ -221,6 +273,18 @@ public class LABManager : MonoBehaviour
         }
     }
 
+    void OnLiquidsButtonClicked()
+    {
+        drawLiquids = !drawLiquids;
+        LiquidsButton.GetComponentInChildren<Text>().text = drawLiquids ? "Disable Liquids" : "Enable Liquids";
+    }
+
+    void OnPowdersButtonClicked()
+    {
+        drawPowders = !drawPowders;
+        PowdersButton.GetComponentInChildren<Text>().text = drawPowders ? "Disable Powders" : "Enable Powders";
+    }
+
     void ClearPrefabs()
     {
         foreach (Transform child in ParentTransform)
@@ -230,5 +294,6 @@ public class LABManager : MonoBehaviour
 
         instantiatedPrefabs.Clear();
         usedLiquidPrefabs.Clear();
+        usedPowderPrefabs.Clear();
     }
 }
