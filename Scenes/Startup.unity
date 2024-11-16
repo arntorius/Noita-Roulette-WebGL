@@ -1969,7 +1969,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Weclome to the Noita Roulette
+  m_Text: Welcome to the Noita Roulette
 --- !u!222 &916906677
 CanvasRenderer:
   m_ObjectHideFlags: 0
